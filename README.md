@@ -4,7 +4,7 @@ English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
 Six reusable agent skills for chemistry and life-science workflows. Each skill combines focused instructions with optional scripts and references. They are plain files: an agent can read and use them without a proprietary skill invocation API.
 
-**Experimental, version 0.2.3.** Developed from practical research workflows and tested locally with two agent models. Cross-machine validation is still pending. See [validation and limitations](VALIDATION.md).
+**Version 0.2.3.** Developed from practical research workflows.
 
 ## Skills
 
