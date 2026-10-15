@@ -1,8 +1,10 @@
 # Scientific Workflow Skills
 
+**AI skills for chemistry and life-science research**
+
 English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
-AI skills for chemistry and life-science research: organize NMR files, summarize activity data, draw chemical structures and prepare scientific figures.
+Organize NMR files, summarize activity data, draw chemical structures and prepare scientific figures with your AI assistant.
 
 A **skill** gives your AI assistant instructions and tools for a particular task. Install it, then ask for what you need in everyday language.
 
