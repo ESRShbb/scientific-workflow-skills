@@ -1,0 +1,4 @@
+interface:
+  display_name: "Characterization curation"
+  short_description: "Traceable multimodal characterization evidence"
+  default_prompt: "Use $characterization-curation for the requested workflow with explicit inputs and a new output directory."

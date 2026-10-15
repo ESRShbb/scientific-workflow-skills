@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChemDraw and Office OLE"
+  short_description: "Native chemical drawings and Office OLE checks"
+  default_prompt: "Use $chemdraw-ole for the requested workflow with explicit inputs and a new output directory."

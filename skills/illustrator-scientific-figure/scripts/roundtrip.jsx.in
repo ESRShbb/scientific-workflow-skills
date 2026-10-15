@@ -1,0 +1,42 @@
+// Executes only the prepared job copy; no application Quit or preference changes.
+(function(){
+    var cfg=__CONFIG__,doc=null;
+    var r={native_execution:'RUNNING',strategy:cfg.strategy,icc_embedding_requested:true,
+        migration:'NOT_VERIFIED',visual_review:'NOT_PERFORMED',scientific_review:'NOT_PERFORMED'};
+    function write(path,text){var f=new File(path);if(f.exists)throw new Error('Output exists: '+path);
+        f.encoding='UTF-8';if(!f.open('w'))throw new Error('Cannot write '+path);try{f.write(text);}finally{f.close();}}
+    function checkNew(path){if(new File(path).exists)throw new Error('Output exists: '+path);}
+    function png(d,path){checkNew(path);var o=new ExportOptionsPNG24();o.antiAliasing=true;
+        o.transparency=false;o.artBoardClipping=true;o.horizontalScale=cfg.scale;o.verticalScale=cfg.scale;
+        d.exportFile(new File(path),ExportType.PNG24,o);if(!(new File(path).length>0))throw new Error('Empty PNG');}
+    var root=cfg.root,master=root+'/master.ai';
+    try{
+        checkNew(root+'/report.json');checkNew(master);checkNew(root+'/source.png');checkNew(root+'/reopened.png');checkNew(root+'/reopened.pdf');
+        for(var u=0;u<app.documents.length;u++){
+            try{if(app.documents[u].fullName.fsName===new File(cfg.work).fsName)throw new Error('Job document already open');}
+            catch(e){if(e.message==='Job document already open')throw e;}
+        }
+        doc=app.open(new File(cfg.work));r.before=inspectScientificDocument(doc);
+        if(cfg.strategy!=='preserve'){
+            if(cfg.assets.length!==doc.placedItems.length)throw new Error('Supply one verified asset for every placed item; no source-project fallback');
+            for(var i=0;i<cfg.assets.length;i++){
+                var a=cfg.assets[i];if(a.placed_index>=doc.placedItems.length)throw new Error('Placed index missing');
+                doc.placedItems[a.placed_index].relink(new File(a.copied));
+            }
+        }
+        r.pre_save=inspectScientificDocument(doc);png(doc,root+'/source.png');
+        var so=new IllustratorSaveOptions();so.pdfCompatible=true;so.embedICCProfile=true;
+        so.embedLinkedFiles=(cfg.strategy==='embed');doc.saveAs(new File(master),so);
+        doc.close(SaveOptions.DONOTSAVECHANGES);doc=null;
+        doc=app.open(new File(master));r.reopened=inspectScientificDocument(doc);
+        png(doc,root+'/reopened.png');
+        var pdf=new PDFSaveOptions();pdf.preserveEditability=false;pdf.viewAfterSaving=false;
+        doc.saveAs(new File(root+'/reopened.pdf'),pdf);
+        if(!(new File(master).length>0) || !(new File(root+'/reopened.pdf').length>0))throw new Error('Empty native/PDF result');
+        r.native_execution='SAVE_REOPEN_EXPORTED';
+    }catch(e){r.native_execution='FAILED';r.error=String(e);}
+    finally{
+        if(doc!==null){try{doc.close(SaveOptions.DONOTSAVECHANGES);}catch(e){r.close_error=String(e);r.native_execution='FAILED';}}
+    }
+    var output=figureJson(r);write(root+'/report.json',output);return output;
+}());

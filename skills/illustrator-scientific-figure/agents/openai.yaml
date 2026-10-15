@@ -1,0 +1,4 @@
+interface:
+  display_name: "Illustrator scientific figures"
+  short_description: "Editable AI figures with source integrity"
+  default_prompt: "Use $illustrator-scientific-figure for the requested workflow with explicit inputs and a new output directory."

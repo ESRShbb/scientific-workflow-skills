@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific figure format"
+  short_description: "Scientific labels, layout and visual integrity"
+  default_prompt: "Use $scientific-figure-format for the requested workflow with explicit inputs and a new output directory."

@@ -1,0 +1,30 @@
+// Read-only whole-page export. No spectrum, object, or document write operations.
+function exRead(path){var f=new File(path);if(!f.open(File.ReadOnly))throw 'cannot read '+path;var t=new TextStream(f);t.codec='UTF-8';var s=t.readAll();f.close();return s;}
+function exWrite(path,s){var f=new File(path);if(!f.open(File.WriteOnly))throw 'cannot write '+path;var t=new TextStream(f);t.codec='UTF-8';t.write(s);t.flush();f.close();}
+function __FUNCTION__(){
+ var job={},dw=null,log=[];
+ try{
+  var lines=exRead(__JOB_PATH__).split('\n');
+  for(var k=0;k<lines.length;k++){var line=lines[k].replace(/\r$/,'');var sep=line.indexOf('=');if(sep>0)job[line.substring(0,sep)]=line.substring(sep+1);}
+  if(!serialization.open(job.mnova))throw 'open failed';
+  dw=new DocumentWindow(mainWindow.activeWindow());
+  var pages=[],n=dw.pages().length;
+  for(var i=0;i<n;i++){
+   dw.setCurPageIndex(i);var page=new Page(dw.curPage());if(dw.pageIndex(page)!==i)throw 'page activation failed';
+   var spectra=[],texts=[];
+   for(var j=0;j<page.itemCount('NMR Spectrum');j++){
+    var s=new NMRSpectrum(page.item(j,'NMR Spectrum'));if(!s.isValid())throw 'invalid spectrum';
+    spectra.push({nucleus:''+s.getParam('Nucleus'),title:''+s.getParam('Title'),solvent:''+s.getParam('Solvent'),frequency:s.frequency(),scale_limits:s.getScaleLimits()});
+   }
+   for(var t=0;t<page.itemCount('Text');t++)texts.push(''+new Text(page.item(t,'Text')).plainText);
+   var dest=job.export_dir+'/'+job.prefix+'_p'+(i+1)+'.png';
+   var pix=page.toPixmap(300);if(!pix.save(dest,'PNG',100))throw 'whole-page PNG save failed';
+   pages.push({page_number:i+1,spectra:spectra,molecule_count:page.itemCount('Molecule'),text_count:page.itemCount('Text'),texts:texts,png:dest,export_method:'Page.toPixmap(300)'});
+  }
+  exWrite(job.report_out,JSON.stringify({job_id:job.job_id,source:job.mnova,source_sha256:job.source_sha256,page_count:n,pages:pages,saved_mnova:false},null,2));
+  dw.close();dw=null;
+  exWrite(job.success_marker,'SUCCESS\n');log.push('SUCCESS '+n+' pages');
+ }catch(e){log.push('ERROR '+e);if(dw){try{dw.close();}catch(ec){}}}
+ if(job.log)exWrite(job.log,log.join('\n'));
+ Application.quit();
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prism IC50 analysis"
+  short_description: "Traceable Prism extraction and IC50 summaries"
+  default_prompt: "Use $prism-ic50-analysis for the requested workflow with explicit inputs and a new output directory."

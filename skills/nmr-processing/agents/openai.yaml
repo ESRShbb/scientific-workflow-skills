@@ -1,0 +1,4 @@
+interface:
+  display_name: "NMR processing"
+  short_description: "Portable NMR inventory and native export workflow"
+  default_prompt: "Use $nmr-processing to inventory these NMR inputs and carry out the requested operation on verified working copies."
