@@ -1,5 +1,7 @@
 # Scientific Workflow Skills
 
+English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+
 Six reusable agent skills for chemistry and life-science workflows. Each skill combines focused instructions with optional scripts and references. They are plain files: an agent can read and use them without a proprietary skill invocation API.
 
 **Experimental, version 0.2.3.** Developed from practical research workflows and tested locally with two agent models. Cross-machine validation is still pending. See [validation and limitations](VALIDATION.md).
@@ -60,7 +62,3 @@ python -B scripts/validate.py
 This checks package entrypoints, local Markdown links and Python syntax, then runs the bundled synthetic tests in separate processes. It does not launch scientific applications or establish scientific correctness. GitHub Actions runs the same checks on Windows and Linux.
 
 No private experimental inputs or application binaries are distributed. Tests generate synthetic fixtures. See [third-party notices](THIRD_PARTY_NOTICES.md) and the [MIT license](LICENSE).
-
-## 中文速览
-
-这六个 skill 面向通用科研流程，不绑定某个论文或项目。把需要的完整目录复制到项目的 `.agents/skills/`，或直接让 Agent 读取对应的 `SKILL.md`。原生操作仍需要本机安装并授权相应软件。当前为实验版，已经验证的范围和仍存在的问题见 [VALIDATION.md](VALIDATION.md)。
